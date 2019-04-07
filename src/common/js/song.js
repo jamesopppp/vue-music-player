@@ -3,7 +3,7 @@ import { ERR_OK } from 'api/config'
 import { Base64 } from 'js-base64'
 
 export default class Song {
-  constructor({id, mid, singer, name, album, duration, image, url}) {
+  constructor({ id, mid, singer, name, album, duration, image, url }) {
     this.id = id
     this.mid = mid
     this.singer = singer
@@ -47,7 +47,7 @@ export function createSong(musicData) {
 }
 
 function filterSinger(singer) {
-  let ret = []
+  const ret = []
   if (!singer) {
     return ''
   }
@@ -67,9 +67,9 @@ export function processSongsUrl(songs) {
   }
   return getSongsUrl(songs).then((res) => {
     if (res.code === ERR_OK) {
-      let midUrlInfo = res.url_mid.data.midurlinfo
+      const midUrlInfo = res.url_mid.data.midurlinfo
       midUrlInfo.forEach((info, index) => {
-        let song = songs[index]
+        const song = songs[index]
         song.url = `http://dl.stream.qqmusic.qq.com/${info.purl}`
       })
     }

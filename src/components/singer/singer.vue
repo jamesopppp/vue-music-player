@@ -5,7 +5,7 @@
   </div>
 </template>
 
-// <script>
+<script>
 //   import ListView from 'base/listview/listview'
 //   import {getSingerList} from 'api/singer'
 //   import {ERR_OK} from 'api/config'

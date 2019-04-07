@@ -15,27 +15,27 @@ export default new Router({
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import( /* webpackChunkName: "about" */ './components/recommend/recommend.vue')
+    component: () => import(/* webpackChunkName: "about" */ './components/recommend/recommend.vue')
   }, {
     path: '/singer',
     name: 'singer',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import( /* webpackChunkName: "about" */ './components/singer/singer.vue')
+    component: () => import(/* webpackChunkName: "about" */ './components/singer/singer.vue')
   }, {
     path: '/rank',
     name: 'rank',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import( /* webpackChunkName: "about" */ './components/rank/rank.vue')
+    component: () => import(/* webpackChunkName: "about" */ './components/rank/rank.vue')
   }, {
     path: '/search',
     name: 'search',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import( /* webpackChunkName: "about" */ './components/search/search.vue')
+    component: () => import(/* webpackChunkName: "about" */ './components/search/search.vue')
   }]
 })

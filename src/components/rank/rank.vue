@@ -22,7 +22,7 @@
   </div>
 </template>
 
-// <script>
+<script>
 //   import Scroll from 'base/scroll/scroll'
 //   import Loading from 'base/loading/loading'
 //   import {getTopList} from 'api/rank'

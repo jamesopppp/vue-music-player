@@ -1,7 +1,17 @@
 <template>
   <div class="recommend" ref="recommend">
     <div class="recommend-content">
-      <div class="slider-wrapper"></div>
+      <div v-if="recommends.length" class="slider-wrapper">
+        <div class="slider-content">
+          <slider>
+            <div v-for="item in recommends" :key="'slider'+ item.id">
+              <a :href="item.linkUrl">
+                <img :src="item.picUrl">
+              </a>
+            </div>
+          </slider>
+        </div>
+      </div>
       <div class="recommend-list">
         <h1 class="list-title">热门歌单推荐</h1>
         <ul></ul>
@@ -43,13 +53,13 @@
   </div>
 </template>
 
-// <script>
-//   import Slider from 'base/slider/slider'
+<script>
+import Slider from 'base/slider/slider'
 //   import Loading from 'base/loading/loading'
 //   import Scroll from 'base/scroll/scroll'
-import { getRecommend } from "api/recommend";
+import { getRecommend } from 'api/recommend'
 //   import {playlistMixin} from 'common/js/mixin'
-  import {ERR_OK} from 'api/config'
+import { ERR_OK } from 'api/config'
 //   import {mapMutations} from 'vuex'
 
 export default {
@@ -58,10 +68,10 @@ export default {
     return {
       recommends: [],
       discList: []
-    };
+    }
   },
   created() {
-    this._getRecommend();
+    this._getRecommend()
 
     // this._getDiscList()
   },
@@ -94,10 +104,9 @@ export default {
     _getRecommend() {
       getRecommend().then(res => {
         if (res.code === ERR_OK) {
-          console.log(res.data.slider)
-          this.recommends = res.data.slider;
+          this.recommends = res.data.slider
         }
-      });
+      })
     }
     // _getDiscList() {
     //   getDiscList().then((res) => {
@@ -109,13 +118,13 @@ export default {
     // ...mapMutations({
     //   setDisc: 'SET_DISC'
     // })
+  },
+  components: {
+    Slider
+    // Loading,
+    // Scroll
   }
-  // components: {
-  //   Slider,
-  //   Loading,
-  //   Scroll
-  // }
-};
+}
 </script>
 
 <style scoped lang="stylus">
