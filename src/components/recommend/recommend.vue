@@ -57,7 +57,7 @@
 import Slider from 'base/slider/slider'
 //   import Loading from 'base/loading/loading'
 //   import Scroll from 'base/scroll/scroll'
-import { getRecommend } from 'api/recommend'
+import { getRecommend, getDiscList } from 'api/recommend'
 //   import {playlistMixin} from 'common/js/mixin'
 import { ERR_OK } from 'api/config'
 //   import {mapMutations} from 'vuex'
@@ -72,8 +72,7 @@ export default {
   },
   created() {
     this._getRecommend()
-
-    // this._getDiscList()
+    this._getDiscList()
   },
   // activated() {
   //   setTimeout(() => {
@@ -107,14 +106,15 @@ export default {
           this.recommends = res.data.slider
         }
       })
+    },
+    _getDiscList() {
+      getDiscList().then(res => {
+        if (res.code === ERR_OK) {
+          this.discList = res.data.list
+          console.log(res)
+        }
+      })
     }
-    // _getDiscList() {
-    //   getDiscList().then((res) => {
-    //     if (res.code === ERR_OK) {
-    //       this.discList = res.data.list
-    //     }
-    //   })
-    // },
     // ...mapMutations({
     //   setDisc: 'SET_DISC'
     // })
