@@ -1,22 +1,34 @@
 <template>
   <div class="recommend" ref="recommend">
-    <div class="recommend-content">
-      <div v-if="recommends.length" class="slider-wrapper">
-        <div class="slider-content">
-          <slider>
-            <div v-for="item in recommends" :key="'slider'+ item.id">
-              <a :href="item.linkUrl">
-                <img :src="item.picUrl">
-              </a>
-            </div>
-          </slider>
+    <scroll ref="scroll" class="recommend-content" :data="discList">
+      <div>
+        <div v-if="recommends.length" class="slider-wrapper">
+          <div class="slider-content">
+            <slider>
+              <div v-for="item in recommends" :key="'slider'+ item.id">
+                <a :href="item.linkUrl">
+                  <img class="needsclick" @load="loadImage" :src="item.picUrl">
+                </a>
+              </div>
+            </slider>
+          </div>
+        </div>
+        <div class="recommend-list">
+          <h1 class="list-title">热门歌单推荐</h1>
+          <ul>
+            <li v-for="(item,index) in discList" class="item" :key="'disc'+index">
+              <div class="icon">
+                <img width="60" height="60" v-lazy="item.imgurl">
+              </div>
+              <div class="text">
+                <h2 class="name" v-html="item.dissname"></h2>
+                <p class="desc" v-html="item.creator.name"></p>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
-      <div class="recommend-list">
-        <h1 class="list-title">热门歌单推荐</h1>
-        <ul></ul>
-      </div>
-    </div>
+    </scroll>
     <!-- <scroll ref="scroll" class="recommend-content" :data="discList">
       <div>
         <div v-if="recommends.length" class="slider-wrapper">
@@ -56,7 +68,7 @@
 <script>
 import Slider from 'base/slider/slider'
 //   import Loading from 'base/loading/loading'
-//   import Scroll from 'base/scroll/scroll'
+import Scroll from 'base/scroll/scroll'
 import { getRecommend, getDiscList } from 'api/recommend'
 //   import {playlistMixin} from 'common/js/mixin'
 import { ERR_OK } from 'api/config'
@@ -80,19 +92,17 @@ export default {
   //   }, 20)
   // },
   methods: {
+    loadImage() {
+      if (!this.checkLoaded) {
+        this.$refs.scroll.refresh()
+        this.checkLoaded = true
+      }
+    },
     // handlePlaylist(playlist) {
     //   const bottom = playlist.length > 0 ? '60px' : ''
 
     //   this.$refs.recommend.style.bottom = bottom
     //   this.$refs.scroll.refresh()
-    // },
-    // loadImage() {
-    //   if (!this.checkloaded) {
-    //     this.checkloaded = true
-    //     setTimeout(() => {
-    //       this.$refs.scroll.refresh()
-    //     }, 20)
-    //   }
     // },
     // selectItem(item) {
     //   this.$router.push({
@@ -111,7 +121,6 @@ export default {
       getDiscList().then(res => {
         if (res.code === ERR_OK) {
           this.discList = res.data.list
-          console.log(res)
         }
       })
     }
@@ -120,9 +129,9 @@ export default {
     // })
   },
   components: {
-    Slider
+    Slider,
     // Loading,
-    // Scroll
+    Scroll
   }
 }
 </script>
