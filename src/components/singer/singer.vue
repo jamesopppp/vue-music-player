@@ -13,8 +13,8 @@ import { ERR_OK } from 'api/config'
 //   import {mapMutations} from 'vuex'
 //   import {playlistMixin} from 'common/js/mixin'
 
-//   const HOT_SINGER_LEN = 10
-//   const HOT_NAME = '热门'
+const HOT_SINGER_LEN = 10
+const HOT_NAME = '热门'
 
 export default {
   // mixins: [playlistMixin],
@@ -44,6 +44,23 @@ export default {
           this.singers = res.data.list
           console.log(this.singers)
           // this.singers = this._normalizeSinger(res.data.list)
+        }
+      })
+    },
+    _normalizeSinger(list) {
+      const map = {
+        hot: {
+          title: HOT_NAME,
+          items: []
+        }
+      }
+
+      list.forEach((item, index) => {
+        if (index < HOT_SINGER_LEN) {
+          map.hot.items.push({
+            id: item.Fsinger_mid,
+            name: item.Fsinger_name
+          })
         }
       })
     }
