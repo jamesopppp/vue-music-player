@@ -1,5 +1,12 @@
 <template>
-  <scroll class="listview" :data="data" ref="listview">
+  <scroll
+    @scroll="scroll"
+    class="listview"
+    :listenScroll="listenScroll"
+    :data="data"
+    ref="listview"
+    :probeType="probeType"
+  >
     <ul>
       <li ref="listGroup" v-for="(group,index) in data" :key="'group'+index" class="list-group">
         <h2 class="list-group-title">{{group.title}}</h2>
@@ -22,6 +29,7 @@
           v-for="(item,index) in shortcutList"
           class="item"
           :key="'shortcut'+index"
+          :class="{'current':currentIndex===index}"
         >{{item}}</li>
       </ul>
     </div>
@@ -44,10 +52,16 @@ export default {
     }
   },
   data() {
-    return {}
+    return {
+      scrollY: -1,
+      currentIndex: 0
+    }
   },
   created() {
     this.touch = {}
+    this.listenScroll = true
+    this.listHeight = []
+    this.probeType = 3
   },
   computed: {
     shortcutList() {
@@ -71,8 +85,41 @@ export default {
       const anchorIndex = parseInt(this.touch.anchorIndex + delta)
       this._scrollTo(anchorIndex)
     },
+    scroll(pos) {
+      this.scrollY = pos.y
+    },
     _scrollTo(index) {
       this.$refs.listview.scrollToElement(this.$refs.listGroup[index], 0)
+    },
+    _calculateHeight() {
+      this.listHeight = []
+      const list = this.$refs.listGroup
+      let height = 0
+      this.listHeight.push(height)
+      for (let i = 0; i < list.length; i++) {
+        const item = list[i]
+        height += item.clientHeight
+        this.listHeight.push(height)
+      }
+    }
+  },
+  watch: {
+    data() {
+      setTimeout(() => {
+        this._calculateHeight()
+      }, 20)
+    },
+    scrollY(newY) {
+      const listHeight = this.listHeight
+      for (let i = 0; i < listHeight.length; i++) {
+        const height1 = listHeight[i]
+        const height2 = listHeight[i + 1]
+        if (!height2 || (-newY > height1 && -newY < height2)) {
+          this.currentIndex = i
+          return
+        }
+      }
+      this.currentIndex = 0
     }
   },
   components: {
