@@ -11,7 +11,11 @@
         </ul>
       </li>
     </ul>
-    <div class="list-shortcut" @touchstart="onShortcutTouchStart">
+    <div
+      class="list-shortcut"
+      @touchstart="onShortcutTouchStart"
+      @touchmove.stop.prevent="onShortcutTouchMove"
+    >
       <ul>
         <li
           :data-index="index"
@@ -29,6 +33,8 @@ import Scroll from 'base/scroll/scroll'
 // import Loading from 'base/loading/loading'
 import { getData } from 'common/js/dom'
 
+const ANCHOR_HEIGHT = 18
+
 export default {
   props: {
     data: {
@@ -40,6 +46,9 @@ export default {
   data() {
     return {}
   },
+  created() {
+    this.touch = {}
+  },
   computed: {
     shortcutList() {
       return this.data.map(group => {
@@ -50,7 +59,20 @@ export default {
   methods: {
     onShortcutTouchStart(e) {
       const anchorIndex = getData(e.target, 'index')
-      this.$refs.listview.scrollToElement(this.$refs.listGroup[anchorIndex], 0)
+      const firstTouch = e.touches[0]
+      this.touch.y1 = firstTouch.pageY
+      this.touch.anchorIndex = anchorIndex
+      this._scrollTo(anchorIndex)
+    },
+    onShortcutTouchMove(e) {
+      const firstTouch = e.touches[0]
+      this.touch.y2 = firstTouch.pageY
+      const delta = ((this.touch.y2 - this.touch.y1) / ANCHOR_HEIGHT) | 0
+      const anchorIndex = parseInt(this.touch.anchorIndex + delta)
+      this._scrollTo(anchorIndex)
+    },
+    _scrollTo(index) {
+      this.$refs.listview.scrollToElement(this.$refs.listGroup[index], 0)
     }
   },
   components: {
