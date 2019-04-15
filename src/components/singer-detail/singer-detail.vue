@@ -1,17 +1,38 @@
 <template>
-  <transition name="slide">
+  <transition name="slide" appear>
     <div class="singer-details"></div>
   </transition>
 </template>
 
 <script>
+import { getSingerDetails } from 'api/singer'
+import { mapGetters } from 'vuex'
+import { ERR_OK } from 'api/config'
+
 export default {
-  computed: {},
+  computed: {
+    ...mapGetters(['singer'])
+  },
   data() {
     return {}
   },
-  created() {},
-  methods: {},
+  created() {
+    this._getDetails()
+  },
+  methods: {
+    _getDetails() {
+      if (!this.singer.id) {
+        this.$router.push('/singer')
+        return
+      }
+
+      getSingerDetails(this.singer.id).then(res => {
+        if (res.code === ERR_OK) {
+          console.log(res.data.list)
+        }
+      })
+    }
+  },
   components: {}
 }
 </script>
