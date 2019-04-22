@@ -8,7 +8,7 @@
       <div class="filter"></div>
     </div>
     <div class="bg-layer" ref="layer"></div>
-    <scroll :data="songs" class="list" ref="list">
+    <scroll @scroll="scroll" :probe-type="probeType" :data="songs" class="list" ref="list">
       <div class="song-list-wrapper">
         <song-list :songs="songs"></song-list>
       </div>
@@ -21,6 +21,11 @@ import Scroll from 'base/scroll/scroll'
 import SongList from 'base/song-list/song-list'
 
 export default {
+  data() {
+    return {
+      scrollY: 0
+    }
+  },
   props: {
     bgImage: {
       type: String,
@@ -41,9 +46,24 @@ export default {
       return `background-image:url(${this.bgImage})`
     }
   },
-  created() {},
+  watch: {
+    scrollY(newY) {
+      this.$refs.layer.style['transform'] = `translate3d(0,${newY}px,0)`
+      this.$refs.layer.style['webkitTransform'] = `translate3d(0,${newY}px,0)`
+    }
+  },
+  created() {
+    this.probeType = 3
+    this.listenScroll = true
+  },
   mounted() {
     this.$refs.list.$el.style.top = `${this.$refs.bgImage.clientHeight}px`
+  },
+  methods: {
+    scroll(pos) {
+      this.scrollY = pos.y
+      console.log(this.scrollY)
+    }
   },
   components: {
     Scroll,
