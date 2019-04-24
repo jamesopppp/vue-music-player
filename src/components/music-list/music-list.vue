@@ -8,7 +8,14 @@
       <div class="filter"></div>
     </div>
     <div class="bg-layer" ref="layer"></div>
-    <scroll @scroll="scroll" :probe-type="probeType" :data="songs" class="list" ref="list">
+    <scroll
+      :listen-scroll="listenScroll"
+      @scroll="scroll"
+      :probe-type="probeType"
+      :data="songs"
+      class="list"
+      ref="list"
+    >
       <div class="song-list-wrapper">
         <song-list :songs="songs"></song-list>
       </div>
@@ -19,6 +26,8 @@
 <script>
 import Scroll from 'base/scroll/scroll'
 import SongList from 'base/song-list/song-list'
+
+const RESERVED_HEIGHT = 40
 
 export default {
   data() {
@@ -48,8 +57,11 @@ export default {
   },
   watch: {
     scrollY(newY) {
-      this.$refs.layer.style['transform'] = `translate3d(0,${newY}px,0)`
-      this.$refs.layer.style['webkitTransform'] = `translate3d(0,${newY}px,0)`
+      const tranlateY = Math.max(this.minTranslateY, newY)
+      this.$refs.layer.style['transform'] = `translate3d(0,${tranlateY}px,0)`
+      this.$refs.layer.style[
+        'webkitTransform'
+      ] = `translate3d(0,${tranlateY}px,0)`
     }
   },
   created() {
@@ -57,12 +69,13 @@ export default {
     this.listenScroll = true
   },
   mounted() {
-    this.$refs.list.$el.style.top = `${this.$refs.bgImage.clientHeight}px`
+    this.imageHeight = this.$refs.bgImage.clientHeight
+    this.minTranslateY = -this.imageHeight + RESERVED_HEIGHT
+    this.$refs.list.$el.style.top = `${this.imageHeight}px`
   },
   methods: {
     scroll(pos) {
       this.scrollY = pos.y
-      console.log(this.scrollY)
     }
   },
   components: {
